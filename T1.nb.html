@@ -173,21 +173,94 @@ $(document).ready(function () {
 
 
 <!-- rnb-text-begin -->
-<p>This is an <a href="http://rmarkdown.rstudio.com">R Markdown</a> Notebook. When you execute code within the notebook, the results appear beneath the code.</p>
-<p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Ctrl+Shift+Enter</em>.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdChjYXJzKVxuYGBgIn0= -->
-<pre class="r"><code>plot(cars)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkYXRhLnRyZWUpXG5jb21wdXRlRW50cm9weSA8LSBmdW5jdGlvbihkYXRhLCBhdHRJbmRleD1OVUxMLCBjbGFzc0luZGV4KSB7XG4gICAgXG4gICAgI2NsYXNzZXMgbm8gcHJvYmxlbWFcbiAgICBjbGFzc2VzIDwtIHVuaXF1ZShkYXRhWyxjbGFzc0luZGV4XSlcbiAgICBcbiAgICAjc2UgYXR0SW5kZXggbmFvIGZvciBpbmZvcm1hZG8sIGNhbGN1bGEgYSBlbnRyb3BpYSAoSW5mbyhEKSkgcGFyYSBvIGNvbmp1bnRvIGRlIGRhZG9zIGludGVpcm9cbiAgICBpZiAoaXMubnVsbChhdHRJbmRleCkpIHtcbiAgICAgICAgI2EgcHJpb3JpIGVudHJvcHlcbiAgICAgICAgZW50cm9weTwtMFxuICAgICAgICBmb3IgKGlpIGluIDE6bGVuZ3RoKGNsYXNzZXMpKXtcbiAgICAgICAgICAgIHRlbXA8LSBsZW5ndGgod2hpY2goZGF0YVssY2xhc3NJbmRleF0gPT0gY2xhc3Nlc1tpaV0pKVxuICAgICAgICAgICAgcHJvYiA8LSB0ZW1wL2RpbShkYXRhKVsxXVxuICAgICAgICAgICAgZW50cm9weSA8LSBlbnRyb3B5ICsgKC0ocHJvYipsb2cyKHByb2IpKSlcbiAgICAgICAgfVxuICAgIH0gZWxzZXtcbiAgICAgICAgI2Nhc28gY29udHLDoXJpbywgY2FsY3VsYSBhIGVudHJvcGlhIHJlc3RyaXRhIGEgdW0gc3ViY29uanVudG8gZGUgZGFkb3MgXG4gICAgICAgICMgKGFww7NzIHBhcnRpY2FvIHBvciB2YWxvciAndicgZG8gYXRyaWJ1dG8gJ0EnKVxuICAgICAgICB2YWx1ZXM8LSB1bmlxdWUoZGF0YVssYXR0SW5kZXhdKVxuICAgICAgICBlbnRyb3B5PC0wXG4gICAgICAgIGZvciAoamogaW4gMTpsZW5ndGgodmFsdWVzKSkge1xuICAgICAgICAgICAgdGVtcDEgPC0gbGVuZ3RoKHdoaWNoKGRhdGFbLGF0dEluZGV4XSA9PXZhbHVlc1tqal0pKSBcbiAgICAgICAgICAgIHByb2IxIDwtIHRlbXAxL2RpbShkYXRhKVsxXVxuICAgICAgICAgICAgZGF0YS5zdWJzZXQgPC0gZGF0YVt3aGljaChkYXRhWyxhdHRJbmRleF0gPT12YWx1ZXNbampdKSxdXG4gICAgICAgICAgICBzb21hPC0wXG4gICAgICAgICAgICBmb3IgKGlpIGluIDE6bGVuZ3RoKGNsYXNzZXMpKXtcbiAgICAgICAgICAgICAgICB0ZW1wPC0gbGVuZ3RoKHdoaWNoKGRhdGEuc3Vic2V0WyxjbGFzc0luZGV4XT09Y2xhc3Nlc1tpaV0pKVxuICAgICAgICAgICAgICAgIGlmKHRlbXAgPiAwKXtcbiAgICAgICAgICAgICAgICAgICAgcHJvYiA8LSB0ZW1wL2RpbShkYXRhLnN1YnNldClbMV1cbiAgICAgICAgICAgICAgICAgICAgc29tYSA8LSBzb21hKygtKHByb2IqbG9nMihwcm9iKSkpXG4gICAgICAgICAgICAgICAgfWVsc2V7XG4gICAgICAgICAgICAgICAgICAgIHNvbWEgPC0gc29tYSswXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuICAgICAgICAgICAgZW50cm9weSA8LSBlbnRyb3B5ICsgKHByb2IxKnNvbWEpXG4gICAgICAgIH1cbiAgICB9XG4gIGVudHJvcHlcbiAgICB9ICBcbiAgXG5kYXRhIDwtIHJlYWQuY3N2KFwiZGFkb3NCZW5jaG1hcmsuY3N2XCIsaGVhZGVyID0gVFJVRSxzdHJpbmdzQXNGYWN0b3JzID0gRkFMU0Usc2VwPVwiO1wiKVxuaW5kZXhDbGFzcyA8LSA1XG5lbnRyb3B5Q2xhc3MgPC0gY29tcHV0ZUVudHJvcHkoZGF0YSwgTlVMTCwgaW5kZXhDbGFzcylcbmVudHJvcGllcyA8LSBudW1lcmljKG5jb2woZGF0YSktMSlcbmZvcihpIGluIDE6KG5jb2woZGF0YSktMSkpe1xuICBlbnRyb3BpZXNbaV0gPC0gZW50cm9weUNsYXNzIC0gY29tcHV0ZUVudHJvcHkoZGF0YSwgYXR0SW5kZXggPSBpLCBpbmRleENsYXNzKVxufVxubWF4R2FpbiA8LSB3aGljaC5tYXgoZW50cm9waWVzKVxudHJlZSA8LSBOb2RlJG5ldyhjb2xuYW1lcyhkYXRhW21heEdhaW5dKSlcbnRlc3QgPC0gdW5pcXVlKGRhdGFbbWF4R2Fpbl0pXG5lbnRyb3BpZXMgPC0gTlVMTFxuZW50cm9waWVzIDwtIG51bWVyaWMobnJvdyh0ZXN0KSlcbnN1YkRhdGEgPC0gbGlzdCgpXG5zdWJEYXRhMiA8LSBsaXN0KClcbmZvcihpIGluIDE6KG5yb3codGVzdCkpKXtcbiAgdHJlZSRBZGRDaGlsZCh0ZXN0W1sxXV1baV0pXG4gIHN1YkRhdGFbW2ldXSA8LSBkYXRhW3doaWNoKGRhdGFbW21heEdhaW5dXT09dGVzdFtbMV1dW2ldKSxdXG4gIGlmKGxlbmd0aCh1bmlxdWUoc3ViRGF0YVtbaV1dWyxpbmRleENsYXNzXSkpID4gMSl7XG4gIGVudHJvcHlDbGFzcyA8LSBjb21wdXRlRW50cm9weShzdWJEYXRhW1tpXV0sIE5VTEwsIGluZGV4Q2xhc3MpXG4gIGZvcihkIGluIDE6KG5jb2woc3ViRGF0YVtbaV1dKS0xKSl7XG4gICAgaWYoZCAhPSBtYXhHYWluKXtcbiAgICBlbnRyb3BpZXNbZF0gPC0gZW50cm9weUNsYXNzIC0gY29tcHV0ZUVudHJvcHkoc3ViRGF0YVtbaV1dLCBhdHRJbmRleCA9IGQsIGluZGV4Q2xhc3MpXG4gICAgICB9IGVsc2UgZW50cm9waWVzW2RdID0gLTk5XG4gIH1cbiAgbWF4R2FpbjIgPC0gd2hpY2gubWF4KGVudHJvcGllcylcbiAgcHJpbnQoc3ViRGF0YVtbaV1dKVxuICAjdGVzdCA8LSBOVUxMXG4gIHRlc3QgPC0gdW5pcXVlKHN1YkRhdGFbW2ldXVttYXhHYWluMl0pXG4gIFxuICBmb3IoaiBpbiAxOihucm93KHRlc3QpKSl7XG4gICAgICAgIHN1YkRhdGEyW1tqXV0gPC0gc3ViRGF0YVtbaV1dW3doaWNoKHN1YkRhdGFbW2ldXVtbbWF4R2FpbjJdXT09dGVzdFtbMV1dW2pdKSxdXG4gIH1cbn1cbn1cbmBgYCJ9 -->
+<pre class="r"><code>library(data.tree)
+computeEntropy &lt;- function(data, attIndex=NULL, classIndex) {
+    
+    #classes no problema
+    classes &lt;- unique(data[,classIndex])
+    
+    #se attIndex nao for informado, calcula a entropia (Info(D)) para o conjunto de dados inteiro
+    if (is.null(attIndex)) {
+        #a priori entropy
+        entropy&lt;-0
+        for (ii in 1:length(classes)){
+            temp&lt;- length(which(data[,classIndex] == classes[ii]))
+            prob &lt;- temp/dim(data)[1]
+            entropy &lt;- entropy + (-(prob*log2(prob)))
+        }
+    } else{
+        #caso contrário, calcula a entropia restrita a um subconjunto de dados 
+        # (após particao por valor 'v' do atributo 'A')
+        values&lt;- unique(data[,attIndex])
+        entropy&lt;-0
+        for (jj in 1:length(values)) {
+            temp1 &lt;- length(which(data[,attIndex] ==values[jj])) 
+            prob1 &lt;- temp1/dim(data)[1]
+            data.subset &lt;- data[which(data[,attIndex] ==values[jj]),]
+            soma&lt;-0
+            for (ii in 1:length(classes)){
+                temp&lt;- length(which(data.subset[,classIndex]==classes[ii]))
+                if(temp &gt; 0){
+                    prob &lt;- temp/dim(data.subset)[1]
+                    soma &lt;- soma+(-(prob*log2(prob)))
+                }else{
+                    soma &lt;- soma+0
+                }
+            }
+            entropy &lt;- entropy + (prob1*soma)
+        }
+    }
+  entropy
+    }  
+  
+data &lt;- read.csv(&quot;dadosBenchmark.csv&quot;,header = TRUE,stringsAsFactors = FALSE,sep=&quot;;&quot;)
+indexClass &lt;- 5
+entropyClass &lt;- computeEntropy(data, NULL, indexClass)
+entropies &lt;- numeric(ncol(data)-1)
+for(i in 1:(ncol(data)-1)){
+  entropies[i] &lt;- entropyClass - computeEntropy(data, attIndex = i, indexClass)
+}
+maxGain &lt;- which.max(entropies)
+tree &lt;- Node$new(colnames(data[maxGain]))
+test &lt;- unique(data[maxGain])
+entropies &lt;- NULL
+entropies &lt;- numeric(nrow(test))
+subData &lt;- list()
+subData2 &lt;- list()
+for(i in 1:(nrow(test))){
+  tree$AddChild(test[[1]][i])
+  subData[[i]] &lt;- data[which(data[[maxGain]]==test[[1]][i]),]
+  if(length(unique(subData[[i]][,indexClass])) &gt; 1){
+  entropyClass &lt;- computeEntropy(subData[[i]], NULL, indexClass)
+  for(d in 1:(ncol(subData[[i]])-1)){
+    if(d != maxGain){
+    entropies[d] &lt;- entropyClass - computeEntropy(subData[[i]], attIndex = d, indexClass)
+      } else entropies[d] = -99
+  }
+  maxGain2 &lt;- which.max(entropies)
+  print(subData[[i]])
+  #test &lt;- NULL
+  test &lt;- unique(subData[[i]][maxGain2])
+  
+  for(j in 1:(nrow(test))){
+        subData2[[j]] &lt;- subData[[i]][which(subData[[i]][[maxGain2]]==test[[1]][j]),]
+  }
+}
+}</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibmNvbCI6NSwibnJvdyI6NX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJxMVNUVS9ETUF4MTIzUmpSYUJKL0k3MUFCTDNTYkFEaDBsOGJOclZ0R0ZFcEVtVnBvSmZQMGhLVXpYUmdBdUhOczkyN1BmY3ZvZWIzV1cyeXdBZ2hvUVFpQk1EU1d4ZUVSQ1kyZk1ESUxrd0lEWFB2RHUvQzltdGFDUkhoYVg4dDR6UE1MbHZxZEQwYUpRdUt5cXdEOGhLTWZRTC9pU3k1QnIvd0pPMVZCWHlJUExucEN2a3pTQjhTMVdKSldWS0hpdi9lTmNmbWF4Ui9nNGZXVFdHL3U5SkJWYTBDV1UrMGFwMi9hYzJvQXAxcTl5cTAwM0ZyQm9YYnMySGxZTldjaWYzR05ETWxIelBIZFZaNzRhb3N3M0FpYjFnbVVKdEJjZkdhWFBKckVTTitZc3lzMHgwQ0ZxbXN0Wk1DdE1VanowM21GRUZpWGtycktweVVieTI0bTF4ZFcwWmVtbFJMelhxQjQydzVZdy9RN3RSc1dkaU1CakhaK3JjY0c3Vzc3YlBhOFdFZHF1WWJKTnJxUWZYWklYa0x0TXRCNGN2OFF1eEoySURBQUE9In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Tempo"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Temperatura"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Umidade"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Ventoso"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Joga"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"Ensolarado","2":"Quente","3":"Alta","4":"Falso","5":"Nao","_rn_":"1"},{"1":"Ensolarado","2":"Quente","3":"Alta","4":"Verdadeiro","5":"Nao","_rn_":"2"},{"1":"Ensolarado","2":"Amena","3":"Alta","4":"Falso","5":"Nao","_rn_":"8"},{"1":"Ensolarado","2":"Fria","3":"Normal","4":"Falso","5":"Sim","_rn_":"9"},{"1":"Ensolarado","2":"Amena","3":"Normal","4":"Verdadeiro","5":"Sim","_rn_":"11"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[5]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Add a new chunk by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em>.</p>
-<p>When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the <em>Preview</em> button or press <em>Ctrl+Shift+K</em> to preview the HTML file).</p>
-<p>The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike <em>Knit</em>, <em>Preview</em> does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.</p>
-<!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRyYWJhbGhvIDEgLSBBcHJlbmRpemFkbyBkZSBNw6FxdWluYSINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNClRoaXMgaXMgYW4gW1IgTWFya2Rvd25dKGh0dHA6Ly9ybWFya2Rvd24ucnN0dWRpby5jb20pIE5vdGVib29rLiBXaGVuIHlvdSBleGVjdXRlIGNvZGUgd2l0aGluIHRoZSBub3RlYm9vaywgdGhlIHJlc3VsdHMgYXBwZWFyIGJlbmVhdGggdGhlIGNvZGUuIA0KDQpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouIA0KDQpgYGB7cn0NCnBsb3QoY2FycykNCmBgYA0KDQpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ3RybCtBbHQrSSouDQoNCldoZW4geW91IHNhdmUgdGhlIG5vdGVib29rLCBhbiBIVE1MIGZpbGUgY29udGFpbmluZyB0aGUgY29kZSBhbmQgb3V0cHV0IHdpbGwgYmUgc2F2ZWQgYWxvbmdzaWRlIGl0IChjbGljayB0aGUgKlByZXZpZXcqIGJ1dHRvbiBvciBwcmVzcyAqQ3RybCtTaGlmdCtLKiB0byBwcmV2aWV3IHRoZSBIVE1MIGZpbGUpLg0KDQpUaGUgcHJldmlldyBzaG93cyB5b3UgYSByZW5kZXJlZCBIVE1MIGNvcHkgb2YgdGhlIGNvbnRlbnRzIG9mIHRoZSBlZGl0b3IuIENvbnNlcXVlbnRseSwgdW5saWtlICpLbml0KiwgKlByZXZpZXcqIGRvZXMgbm90IHJ1biBhbnkgUiBjb2RlIGNodW5rcy4gSW5zdGVhZCwgdGhlIG91dHB1dCBvZiB0aGUgY2h1bmsgd2hlbiBpdCB3YXMgbGFzdCBydW4gaW4gdGhlIGVkaXRvciBpcyBkaXNwbGF5ZWQuDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRyYWJhbGhvIDEgLSBBcHJlbmRpemFkbyBkZSBNw6FxdWluYSINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRyZWUpDQoNCmNvbXB1dGVFbnRyb3B5IDwtIGZ1bmN0aW9uKGRhdGEsIGF0dEluZGV4PU5VTEwsIGNsYXNzSW5kZXgpIHsNCiAgICANCiAgICAjY2xhc3NlcyBubyBwcm9ibGVtYQ0KICAgIGNsYXNzZXMgPC0gdW5pcXVlKGRhdGFbLGNsYXNzSW5kZXhdKQ0KICAgIA0KICAgICNzZSBhdHRJbmRleCBuYW8gZm9yIGluZm9ybWFkbywgY2FsY3VsYSBhIGVudHJvcGlhIChJbmZvKEQpKSBwYXJhIG8gY29uanVudG8gZGUgZGFkb3MgaW50ZWlybw0KICAgIGlmIChpcy5udWxsKGF0dEluZGV4KSkgew0KICAgICAgICAjYSBwcmlvcmkgZW50cm9weQ0KICAgICAgICBlbnRyb3B5PC0wDQogICAgICAgIGZvciAoaWkgaW4gMTpsZW5ndGgoY2xhc3Nlcykpew0KICAgICAgICAgICAgdGVtcDwtIGxlbmd0aCh3aGljaChkYXRhWyxjbGFzc0luZGV4XSA9PSBjbGFzc2VzW2lpXSkpDQogICAgICAgICAgICBwcm9iIDwtIHRlbXAvZGltKGRhdGEpWzFdDQogICAgICAgICAgICBlbnRyb3B5IDwtIGVudHJvcHkgKyAoLShwcm9iKmxvZzIocHJvYikpKQ0KICAgICAgICB9DQogICAgfSBlbHNlew0KICAgICAgICAjY2FzbyBjb250csOhcmlvLCBjYWxjdWxhIGEgZW50cm9waWEgcmVzdHJpdGEgYSB1bSBzdWJjb25qdW50byBkZSBkYWRvcyANCiAgICAgICAgIyAoYXDDs3MgcGFydGljYW8gcG9yIHZhbG9yICd2JyBkbyBhdHJpYnV0byAnQScpDQogICAgICAgIHZhbHVlczwtIHVuaXF1ZShkYXRhWyxhdHRJbmRleF0pDQogICAgICAgIGVudHJvcHk8LTANCiAgICAgICAgZm9yIChqaiBpbiAxOmxlbmd0aCh2YWx1ZXMpKSB7DQogICAgICAgICAgICB0ZW1wMSA8LSBsZW5ndGgod2hpY2goZGF0YVssYXR0SW5kZXhdID09dmFsdWVzW2pqXSkpIA0KICAgICAgICAgICAgcHJvYjEgPC0gdGVtcDEvZGltKGRhdGEpWzFdDQogICAgICAgICAgICBkYXRhLnN1YnNldCA8LSBkYXRhW3doaWNoKGRhdGFbLGF0dEluZGV4XSA9PXZhbHVlc1tqal0pLF0NCiAgICAgICAgICAgIHNvbWE8LTANCiAgICAgICAgICAgIGZvciAoaWkgaW4gMTpsZW5ndGgoY2xhc3Nlcykpew0KICAgICAgICAgICAgICAgIHRlbXA8LSBsZW5ndGgod2hpY2goZGF0YS5zdWJzZXRbLGNsYXNzSW5kZXhdPT1jbGFzc2VzW2lpXSkpDQogICAgICAgICAgICAgICAgaWYodGVtcCA+IDApew0KICAgICAgICAgICAgICAgICAgICBwcm9iIDwtIHRlbXAvZGltKGRhdGEuc3Vic2V0KVsxXQ0KICAgICAgICAgICAgICAgICAgICBzb21hIDwtIHNvbWErKC0ocHJvYipsb2cyKHByb2IpKSkNCiAgICAgICAgICAgICAgICB9ZWxzZXsNCiAgICAgICAgICAgICAgICAgICAgc29tYSA8LSBzb21hKzANCiAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICB9DQogICAgICAgICAgICBlbnRyb3B5IDwtIGVudHJvcHkgKyAocHJvYjEqc29tYSkNCiAgICAgICAgfQ0KICAgIH0NCiAgZW50cm9weQ0KICAgIH0gIA0KICANCmRhdGEgPC0gcmVhZC5jc3YoImRhZG9zQmVuY2htYXJrLmNzdiIsaGVhZGVyID0gVFJVRSxzdHJpbmdzQXNGYWN0b3JzID0gRkFMU0Usc2VwPSI7IikNCmluZGV4Q2xhc3MgPC0gNQ0KZW50cm9weUNsYXNzIDwtIGNvbXB1dGVFbnRyb3B5KGRhdGEsIE5VTEwsIGluZGV4Q2xhc3MpDQoNCmVudHJvcGllcyA8LSBudW1lcmljKG5jb2woZGF0YSktMSkNCg0KZm9yKGkgaW4gMToobmNvbChkYXRhKS0xKSl7DQogIGVudHJvcGllc1tpXSA8LSBlbnRyb3B5Q2xhc3MgLSBjb21wdXRlRW50cm9weShkYXRhLCBhdHRJbmRleCA9IGksIGluZGV4Q2xhc3MpDQp9DQoNCm1heEdhaW4gPC0gd2hpY2gubWF4KGVudHJvcGllcykNCg0KdHJlZSA8LSBOb2RlJG5ldyhjb2xuYW1lcyhkYXRhW21heEdhaW5dKSkNCnRlc3QgPC0gdW5pcXVlKGRhdGFbbWF4R2Fpbl0pDQplbnRyb3BpZXMgPC0gTlVMTA0KZW50cm9waWVzIDwtIG51bWVyaWMobnJvdyh0ZXN0KSkNCnN1YkRhdGEgPC0gbGlzdCgpDQpzdWJEYXRhMiA8LSBsaXN0KCkNCg0KZm9yKGkgaW4gMToobnJvdyh0ZXN0KSkpew0KICB0cmVlJEFkZENoaWxkKHRlc3RbWzFdXVtpXSkNCiAgc3ViRGF0YVtbaV1dIDwtIGRhdGFbd2hpY2goZGF0YVtbbWF4R2Fpbl1dPT10ZXN0W1sxXV1baV0pLF0NCiAgaWYobGVuZ3RoKHVuaXF1ZShzdWJEYXRhW1tpXV1bLGluZGV4Q2xhc3NdKSkgPiAxKXsNCiAgZW50cm9weUNsYXNzIDwtIGNvbXB1dGVFbnRyb3B5KHN1YkRhdGFbW2ldXSwgTlVMTCwgaW5kZXhDbGFzcykNCiAgZm9yKGQgaW4gMToobmNvbChzdWJEYXRhW1tpXV0pLTEpKXsNCiAgICBpZihkICE9IG1heEdhaW4pew0KICAgIGVudHJvcGllc1tkXSA8LSBlbnRyb3B5Q2xhc3MgLSBjb21wdXRlRW50cm9weShzdWJEYXRhW1tpXV0sIGF0dEluZGV4ID0gZCwgaW5kZXhDbGFzcykNCiAgICAgIH0gZWxzZSBlbnRyb3BpZXNbZF0gPSAtOTkNCiAgfQ0KICBtYXhHYWluMiA8LSB3aGljaC5tYXgoZW50cm9waWVzKQ0KICBwcmludChzdWJEYXRhW1tpXV0pDQogIHRlc3QgPC0gdW5pcXVlKHN1YkRhdGFbW2ldXVttYXhHYWluMl0pDQogICAjIyBBIHBhcnRpciBkYXF1aSDDqSByZWN1cnNpdm8NCiAgZm9yKGogaW4gMToobnJvdyh0ZXN0KSkpew0KICAgICAgICBzdWJEYXRhMltbal1dIDwtIHN1YkRhdGFbW2ldXVt3aGljaChzdWJEYXRhW1tpXV1bW21heEdhaW4yXV09PXRlc3RbWzFdXVtqXSksXQ0KICB9DQp9DQp9DQoNCg0KDQoNCmBgYA==</div>
 
 
 

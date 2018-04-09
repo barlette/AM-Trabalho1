@@ -3,16 +3,88 @@ title: "Trabalho 1 - Aprendizado de Máquina"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
 ```{r}
-plot(cars)
+library(data.tree)
+
+computeEntropy <- function(data, attIndex=NULL, classIndex) {
+    
+    #classes no problema
+    classes <- unique(data[,classIndex])
+    
+    #se attIndex nao for informado, calcula a entropia (Info(D)) para o conjunto de dados inteiro
+    if (is.null(attIndex)) {
+        #a priori entropy
+        entropy<-0
+        for (ii in 1:length(classes)){
+            temp<- length(which(data[,classIndex] == classes[ii]))
+            prob <- temp/dim(data)[1]
+            entropy <- entropy + (-(prob*log2(prob)))
+        }
+    } else{
+        #caso contrário, calcula a entropia restrita a um subconjunto de dados 
+        # (após particao por valor 'v' do atributo 'A')
+        values<- unique(data[,attIndex])
+        entropy<-0
+        for (jj in 1:length(values)) {
+            temp1 <- length(which(data[,attIndex] ==values[jj])) 
+            prob1 <- temp1/dim(data)[1]
+            data.subset <- data[which(data[,attIndex] ==values[jj]),]
+            soma<-0
+            for (ii in 1:length(classes)){
+                temp<- length(which(data.subset[,classIndex]==classes[ii]))
+                if(temp > 0){
+                    prob <- temp/dim(data.subset)[1]
+                    soma <- soma+(-(prob*log2(prob)))
+                }else{
+                    soma <- soma+0
+                }
+            }
+            entropy <- entropy + (prob1*soma)
+        }
+    }
+  entropy
+    }  
+  
+data <- read.csv("dadosBenchmark.csv",header = TRUE,stringsAsFactors = FALSE,sep=";")
+indexClass <- 5
+entropyClass <- computeEntropy(data, NULL, indexClass)
+
+entropies <- numeric(ncol(data)-1)
+
+for(i in 1:(ncol(data)-1)){
+  entropies[i] <- entropyClass - computeEntropy(data, attIndex = i, indexClass)
+}
+
+maxGain <- which.max(entropies)
+
+tree <- Node$new(colnames(data[maxGain]))
+test <- unique(data[maxGain])
+entropies <- NULL
+entropies <- numeric(nrow(test))
+subData <- list()
+subData2 <- list()
+
+for(i in 1:(nrow(test))){
+  tree$AddChild(test[[1]][i])
+  subData[[i]] <- data[which(data[[maxGain]]==test[[1]][i]),]
+  if(length(unique(subData[[i]][,indexClass])) > 1){
+  entropyClass <- computeEntropy(subData[[i]], NULL, indexClass)
+  for(d in 1:(ncol(subData[[i]])-1)){
+    if(d != maxGain){
+    entropies[d] <- entropyClass - computeEntropy(subData[[i]], attIndex = d, indexClass)
+      } else entropies[d] = -99
+  }
+  maxGain2 <- which.max(entropies)
+  print(subData[[i]])
+  test <- unique(subData[[i]][maxGain2])
+   ## A partir daqui é recursivo
+  for(j in 1:(nrow(test))){
+        subData2[[j]] <- subData[[i]][which(subData[[i]][[maxGain2]]==test[[1]][j]),]
+  }
+}
+}
+
+
+
+
 ```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
