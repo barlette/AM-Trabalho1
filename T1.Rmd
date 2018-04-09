@@ -7,7 +7,6 @@ output: html_notebook
 library(data.tree)
 
 computeEntropy <- function(data, attIndex=NULL, classIndex) {
-    
     #classes no problema
     classes <- unique(data[,classIndex])
     
@@ -44,7 +43,9 @@ computeEntropy <- function(data, attIndex=NULL, classIndex) {
     }
   entropy
     }  
-  
+```
+
+```{r}
 computeTree <- function(tree, data){
   entropyClass <- computeEntropy(data, NULL, indexClass)
   entropies <- numeric(ncol(data)-1)
@@ -57,14 +58,13 @@ computeTree <- function(tree, data){
   entropies <- numeric(nrow(test))
   subData <- list()
 
-  if(is.null(tree)){
-    tree  <- Node$new(colnames(data[maxGain]))
-  }
+  tree  <- tree$AddChild(colnames(data[maxGain]))
   
   for(i in 1:(nrow(test))){
     child <- tree$AddChild(test[[1]][i])
     subData[[i]] <- data[which(data[[maxGain]]==test[[1]][i]),]
     if(length(unique(subData[[i]][,indexClass])) > 1){
+      child <- tree$AddChild(test[[1]][i])
       subData[[i]] <- computeTree(child, subData[[i]])
     } else {
       child$AddChild(unique(subData[[i]][,indexClass]))
@@ -72,12 +72,13 @@ computeTree <- function(tree, data){
   }
   tree
 }
+```
 
-
+```{r}
 data <- read.csv("dadosBenchmark.csv",header = TRUE,stringsAsFactors = FALSE,sep=";")
 indexClass <- 5
-
-tree <- NULL
+data$RID <- NULL
+tree <- Node$new("ROOT")
 tree <- computeTree(tree, data)
 tree
 ```
