@@ -7,7 +7,7 @@ output: html_notebook
 library(data.tree)
 
 computeEntropy <- function(data, attIndex=NULL, classIndex) {
-    #classes no problema
+    #classes no problema (teste)!!!!!!!!!!
     classes <- unique(data[,classIndex])
     
     #se attIndex nao for informado, calcula a entropia (Info(D)) para o conjunto de dados inteiro
