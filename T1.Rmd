@@ -13,32 +13,70 @@ computeEntropy <- function(data, attIndex=NULL, classIndex) {
     #se attIndex nao for informado, calcula a entropia (Info(D)) para o conjunto de dados inteiro
     if (is.null(attIndex)) {
         #a priori entropy
+        
         entropy<-0
         for (ii in 1:length(classes)){
-            temp<- length(which(data[,classIndex] == classes[ii]))
+            temp<- length(which(data[[classIndex]] == classes[ii]))
             prob <- temp/dim(data)[1]
             entropy <- entropy + (-(prob*log2(prob)))
         }
     } else{
         #caso contrário, calcula a entropia restrita a um subconjunto de dados 
         # (após particao por valor 'v' do atributo 'A')
-        values<- unique(data[,attIndex])
-        entropy<-0
-        for (jj in 1:length(values)) {
-            temp1 <- length(which(data[,attIndex] ==values[jj])) 
-            prob1 <- temp1/dim(data)[1]
-            data.subset <- data[which(data[,attIndex] ==values[jj]),]
-            soma<-0
-            for (ii in 1:length(classes)){
-                temp<- length(which(data.subset[,classIndex]==classes[ii]))
-                if(temp > 0){
-                    prob <- temp/dim(data.subset)[1]
-                    soma <- soma+(-(prob*log2(prob)))
-                }else{
-                    soma <- soma+0
-                }
+        if(is.numeric(data[, attIndex]))
+        {
+          values <- 2
+          entropy <- 0
+
+          temp1 <- length(which(data[,attIndex] > mean(data[,attIndex])))
+          prob1 <- temp1/dim(data)[1]
+          data.subset <- data[which(data[,attIndex] > mean(data[,attIndex])),]
+          soma <- 0
+          for(ii in 1:length(classes)){
+            temp <- length(which(data.subset[,classIndex] == classes[ii]))
+            if(temp > 0){
+              prob <- temp/dim(data.subset)[1]
+              soma <- soma+(-(prob*log2(prob)))
+            }else{
+              soma <- soma+0
             }
-            entropy <- entropy + (prob1*soma)
+          }
+          entropy <- entropy + (prob1*soma)
+          
+          temp1 <- length(which(data[,attIndex] <= mean(data[,attIndex])))
+          prob1 <- temp1/dim(data)[1]
+          data.subset <- data[which(data[,attIndex] <= mean(data[,attIndex])),]
+          soma <- 0
+          for(ii in 1:length(classes)){
+            temp <- length(which(data.subset[,classIndex] == classes[ii]))
+            if(temp > 0){
+              prob <- temp/dim(data.subset)[1]
+              soma <- soma+(-(prob*log2(prob)))
+            }else{
+              soma <- soma+0
+            }
+          }
+          entropy <- entropy + (prob1*soma)
+        }
+        else{
+          values<- unique(data[,attIndex])
+          entropy<-0
+          for (jj in 1:length(values)) {
+              temp1 <- length(which(data[,attIndex] ==values[jj])) 
+              prob1 <- temp1/dim(data)[1]
+              data.subset <- data[which(data[,attIndex] ==values[jj]),]
+              soma<-0
+              for (ii in 1:length(classes)){
+                  temp<- length(which(data.subset[,classIndex]==classes[ii]))
+                  if(temp > 0){
+                      prob <- temp/dim(data.subset)[1]
+                      soma <- soma+(-(prob*log2(prob)))
+                  }else{
+                      soma <- soma+0
+                  }
+              }
+              entropy <- entropy + (prob1*soma)
+          }
         }
     }
   entropy
@@ -46,28 +84,51 @@ computeEntropy <- function(data, attIndex=NULL, classIndex) {
 ```
 
 ```{r}
-computeTree <- function(tree, data){
+computeTree <- function(tree, data, indexClass){
   entropyClass <- computeEntropy(data, NULL, indexClass)
   entropies <- numeric(ncol(data)-1)
   for(i in 1:(ncol(data)-1)){
     entropies[i] <- entropyClass - computeEntropy(data, attIndex = i, indexClass)
   }
   maxGain <- which.max(entropies)
-  test <- unique(data[maxGain])
-  entropies <- NULL
-  entropies <- numeric(nrow(test))
+  if(!is.numeric(data[[maxGain]])){
+    test <- unique(data[maxGain])
+    entropies <- NULL
+    entropies <- numeric(nrow(test))
+  }
+
   subData <- list()
 
   tree  <- tree$AddChild(colnames(data[maxGain]))
   
-  for(i in 1:(nrow(test))){
-    child <- tree$AddChild(test[[1]][i])
-    subData[[i]] <- data[which(data[[maxGain]]==test[[1]][i]),]
+  if(is.numeric(data[[maxGain]])){
+    for(i in 1:2){
+      if(i == 1){
+        child <- tree$AddChild(paste("<=", mean(data[,maxGain])))
+        subData[[i]] <- data[which(data[,maxGain] <= mean(data[,maxGain])),]
+      } 
+      else { 
+        child <- tree$AddChild(paste(">", mean(data[,maxGain]))) 
+        subData[[i]] <- data[which(data[,maxGain] > mean(data[,maxGain])),]
+
+        }
     if(length(unique(subData[[i]][,indexClass])) > 1){
-      child <- tree$AddChild(test[[1]][i])
-      subData[[i]] <- computeTree(child, subData[[i]])
-    } else {
+      child <- computeTree(child, subData[[i]], indexClass)
+    } 
+    else {
       child$AddChild(unique(subData[[i]][,indexClass]))
+    }
+    }
+  }
+  else{
+    for(i in 1:(nrow(test))){
+      child <- tree$AddChild(test[[1]][i])
+      subData[[i]] <- data[which(data[[maxGain]]==test[[1]][i]),]
+      if(length(unique(subData[[i]][,indexClass])) > 1){
+        subData[[i]] <- computeTree(child, subData[[i]], indexClass)
+      } else {
+        child$AddChild(unique(subData[[i]][,indexClass]))
+      }
     }
   }
   tree
@@ -75,10 +136,26 @@ computeTree <- function(tree, data){
 ```
 
 ```{r}
+walkTree <- function(tree, data){
+  
+}
+```
+
+```{r}
 data <- read.csv("dadosBenchmark.csv",header = TRUE,stringsAsFactors = FALSE,sep=";")
 indexClass <- 5
-data$RID <- NULL
-tree <- Node$new("ROOT")
-tree <- computeTree(tree, data)
-tree
+ data$RID <- NULL
+ tree <- Node$new("ROOT")
+ tree <- computeTree(tree, data, indexClass)
+ tree
+
+indexClass <- 9
+
+data2 <- read.csv("pimateste.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+data2$target <- as.logical(data2$target)
+indexClass <- 9
+tree2 <- Node$new("ROOT")
+tree2 <- computeTree(tree2,data2, indexClass)
+tree2
+
 ```
