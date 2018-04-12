@@ -136,20 +136,30 @@ computeTree <- function(tree, data, indexClass){
 ```
 
 ```{r}
-walkTree <- function(tree, data){
-  
+walkTree <- function(tree){
+  if(isLeaf(tree)){ return (as.logical(as.data.frame(tree)))}
+  attribute <- grep(tree$name, colnames(testData))
+  if(is.numeric(testData[[attribute]])){
+    attAvg <- substring(tree$children[[1]]$name, 4)
+    if(testData[[attribute]] > as.numeric(attAvg)){
+      walkTree(tree$children[[2]]$children[[1]])
+    } else {
+      walkTree(tree$children[[1]]$children[[1]])
+    }
+  } 
+  else {
+    
+  }
 }
 ```
 
 ```{r}
 data <- read.csv("dadosBenchmark.csv",header = TRUE,stringsAsFactors = FALSE,sep=";")
 indexClass <- 5
- data$RID <- NULL
- tree <- Node$new("ROOT")
- tree <- computeTree(tree, data, indexClass)
- tree
-
-indexClass <- 9
+data$RID <- NULL
+tree <- Node$new("ROOT")
+tree <- computeTree(tree, data, indexClass)
+tree
 
 data2 <- read.csv("pimateste.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
 data2$target <- as.logical(data2$target)
@@ -158,4 +168,7 @@ tree2 <- Node$new("ROOT")
 tree2 <- computeTree(tree2,data2, indexClass)
 tree2
 
+testData <- read.csv("trainTest.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+testData$target <- as.logical(testData$target)
+result <- walkTree(tree2)
 ```
