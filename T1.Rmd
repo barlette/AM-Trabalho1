@@ -137,7 +137,10 @@ computeTree <- function(tree, data, indexClass){
 
 ```{r}
 walkTree <- function(tree){
-  if(isLeaf(tree)){ return (as.logical(as.data.frame(tree)))}
+  if(isLeaf(tree)){
+    return(tree$name)
+    }
+    else{
   attribute <- grep(tree$name, colnames(testData))
   if(is.numeric(testData[[attribute]])){
     attAvg <- substring(tree$children[[1]]$name, 4)
@@ -148,8 +151,14 @@ walkTree <- function(tree){
     }
   } 
   else {
-    
+    for(i in 1:tree$count){
+      if(identical(testData[[attribute]],tree$children[[i]]$name)){
+        return(walkTree(tree$children[[i]]$children[[1]]))
+      }
+    }
   }
+    }
+
 }
 ```
 
@@ -161,14 +170,17 @@ tree <- Node$new("ROOT")
 tree <- computeTree(tree, data, indexClass)
 tree
 
-data2 <- read.csv("pimateste.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
-data2$target <- as.logical(data2$target)
-indexClass <- 9
-tree2 <- Node$new("ROOT")
-tree2 <- computeTree(tree2,data2, indexClass)
-tree2
+testData <- read.csv("testePercorre.csv",header = TRUE,stringsAsFactors = FALSE,sep=";")
+foo <- walkTree(tree)
 
-testData <- read.csv("trainTest.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
-testData$target <- as.logical(testData$target)
-result <- walkTree(tree2)
+# data2 <- read.csv("pimateste.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+# data2$target <- as.logical(data2$target)
+# indexClass <- 9
+# tree2 <- Node$new("ROOT")
+# tree2 <- computeTree(tree2,data2, indexClass)
+# tree2
+# 
+# testData <- read.csv("trainTest.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+# testData$target <- as.logical(testData$target)
+# result2 <- walkTree(tree2)
 ```

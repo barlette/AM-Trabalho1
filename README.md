@@ -5,7 +5,7 @@ Passos:
 
 DONE -> O algoritmo de indução de uma árvore de decisão, usando como critério de seleção de atributos para divisão de nós o Ganho de Informação (baseado no conceito de entropia), como visto na disciplina, tratando tanto atributos categóricos quanto numéricos;
 
--> Uma função para percorrer a árvore de decisão treinada e realizar a classificação de uma nova instância (do conjunto de teste);
+DONE -> Uma função para percorrer a árvore de decisão treinada e realizar a classificação de uma nova instância (do conjunto de teste);
 
 -> O mecanismo de bootstrap (amostragem com reposição) para geração de subconjuntos a partir do conjunto de dados de treinamento originais. Cada bootstrap será utilizado como conjunto de treinamento de um modelo/árvore no aprendizado ensemble;
 
