@@ -84,11 +84,20 @@ computeEntropy <- function(data, attIndex=NULL, classIndex) {
 ```
 
 ```{r}
+randomAttr <- function(data){
+  colId <- sample(1:ncol(data), sqrt(ncol(data)), replace=FALSE)
+  print(colId)
+  return(colId)
+}
+```
+
+```{r}
 computeTree <- function(tree, data, indexClass){
+  randomAtt <- randomAttr(data[-indexClass])
   entropyClass <- computeEntropy(data, NULL, indexClass)
   entropies <- numeric(ncol(data)-1)
-  for(i in 1:(ncol(data)-1)){
-    entropies[i] <- entropyClass - computeEntropy(data, attIndex = i, indexClass)
+  for(i in 1:length(randomAtt)){
+    entropies[randomAtt[i]] <- entropyClass - computeEntropy(data, attIndex = randomAtt[i], indexClass)
   }
   maxGain <- which.max(entropies)
   if(!is.numeric(data[[maxGain]])){

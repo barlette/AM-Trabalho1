@@ -9,7 +9,7 @@ DONE -> Uma função para percorrer a árvore de decisão treinada e realizar a 
 
 DONE -> O mecanismo de bootstrap (amostragem com reposição) para geração de subconjuntos a partir do conjunto de dados de treinamento originais. Cada bootstrap será utilizado como conjunto de treinamento de um modelo/árvore no aprendizado ensemble;
 
--> O mecanismo de amostragem de m atributos a cada divisão de nó, a partir dos quais serão será selecionado o melhor atributo de acordo com o Ganho de Informação;
+DONE -> O mecanismo de amostragem de m atributos a cada divisão de nó, a partir dos quais serão será selecionado o melhor atributo de acordo com o Ganho de Informação;
 
 -> O treinamento de um ensemble de árvores de decisão, adotando os mecanismos de bootstrap e seleção de atributos com amostragem, como mencionados acima;
 
