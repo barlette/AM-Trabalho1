@@ -235,16 +235,30 @@ computeAcc <- function(ensembleL, testData, classIndex){
  classOne <- data2[which(data2$target == TRUE),]
  classTwo <- data2[which(data2$target == FALSE),]
  
- randomClassOne <- classOne[sample(nrow(classOne), round(0.2*nrow(classOne))),]
- randomClassTwo <- classTwo[sample(nrow(classTwo), round(0.2*nrow(classTwo))),]
- test <- rbind(randomClassOne, randomClassTwo)
+ idClassOne <- rep(1:10, (nrow(classOne)/10) + ceiling((nrow(classOne)%%10)/10))
+ idClassTwo <- rep(1:10, (nrow(classTwo)/10) + ceiling((nrow(classTwo)%%10)/10))
+ if(length(head(idClassOne, nrow(classOne)-length(idClassOne))) > 0 )
+  idClassOne <- head(idClassOne, nrow(classOne)-length(idClassOne))
  
- accuracy <- vector()
+ if(length(head(idClassTwo, nrow(classTwo)-length(idClassTwo)) > 0))
+  idClassTwo <- head(idClassTwo, nrow(classTwo)-length(idClassTwo))
  
- for(i in 1:50){
-  nTrees <- i
-  randomTrees <- list()
-  randomTrees <- ensemble(data2, indexClass, nTrees)
-  accuracy[i] <- computeAcc(randomTrees, test, indexClass)
- }
+ randomizerClassOne <- classOne[sample(seq_along(classOne), length(classOne))]
+ randomizerClassTwo <- classTwo[sample(seq_along(classTwo), length(classTwo))]
+ 
+ ListClassOne <- split(classOne, idClassOne)
+ ListClassTwo <- split(classTwo, idClassTwo)
+ 
+ #randomClassOne <- classOne[sample(nrow(classOne), round(0.2*nrow(classOne))),]
+ #randomClassTwo <- classTwo[sample(nrow(classTwo), round(0.2*nrow(classTwo))),]
+ #test <- rbind(randomClassOne, randomClassTwo)
+ 
+ # accuracy <- vector()
+ # 
+ # for(i in 1:50){
+ #  nTrees <- i
+ #  randomTrees <- list()
+ #  randomTrees <- ensemble(data2, indexClass, nTrees)
+ #  accuracy[i] <- computeAcc(randomTrees, test, indexClass)
+ # }
 ```
