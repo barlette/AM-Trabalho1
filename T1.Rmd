@@ -85,8 +85,8 @@ computeEntropy <- function(data, attIndex=NULL, classIndex) {
 
 ```{r}
 randomAttr <- function(data){
-  colId <- sample(1:ncol(data), sqrt(ncol(data)), replace=FALSE)
-  print(colId)
+  colId <- sample(1:ncol(data), round(sqrt(ncol(data))), replace=FALSE)
+  #print(colId)
   return(colId)
 }
 ```
@@ -124,7 +124,9 @@ computeTree <- function(tree, data, indexClass){
     if(length(unique(subData[[i]][,indexClass])) > 1){
       child <- computeTree(child, subData[[i]], indexClass)
     } 
-    else {
+    else if(length(unique(subData[[i]][,indexClass]))){
+
+      #print(length(unique(subData[[i]][,indexClass])))
       child$AddChild(unique(subData[[i]][,indexClass]))
     }
     }
@@ -135,12 +137,13 @@ computeTree <- function(tree, data, indexClass){
       subData[[i]] <- data[which(data[[maxGain]]==test[[1]][i]),]
       if(length(unique(subData[[i]][,indexClass])) > 1){
         subData[[i]] <- computeTree(child, subData[[i]], indexClass)
-      } else {
+      } else if(length(unique(subData[[i]][,indexClass])) > 0){
+        #print(length(unique(subData[[i]][,indexClass])))
         child$AddChild(unique(subData[[i]][,indexClass]))
       }
     }
   }
-  tree
+  return(tree)
 }
 ```
 
@@ -175,54 +178,79 @@ walkTree <- function(tree, testData){
 bootstraping <- function(data, indexClass){
   bsId <- sample(1:nrow(data), nrow(data), replace=TRUE)
   trainData <- data[bsId,]
-  testDataL <- data[-unique(bsId),]
-  
-  print(trainData)
-  print(testDataL)
   
   tree <- Node$new("ROOT")
   tree <- computeTree(tree, trainData, indexClass)
   
-  print(tree)
-  result <- vector()
-  acc <- 0
-  for(i in 1:nrow(testDataL)){
-    result[i] <- walkTree(tree, testData = testDataL[i,])
-    print(result[i])
-
-    if(testDataL[i,indexClass] == result[i]){
-      acc <- acc+1
-      
-    }
-  }
-  return(acc/nrow(testDataL))
+  return(tree)
 }
 ```
 
 ```{r}
-data <- read.csv("dadosBenchmark.csv",header = TRUE,stringsAsFactors = FALSE,sep=";")
- #data <- read.csv("pima.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+ensemble <- function(data, indexClass, nTrees){
+  randomTrees <- list()
+  for(i in 1:nTrees){
+    randomTrees[[i]] <- bootstraping(data, indexClass)
+  }
+  return(randomTrees)
+}
+```
+
+```{r}
+voter <- function(ensembleL, testData){
+  result <- vector()
+  for(i in 1:length(ensembleL)){
+    if(length(walkTree(ensembleL[[i]], testData)) != 0){
+      result[i] <- walkTree(ensembleL[[i]], testData)
+    }
+  }
+  return(sort(result, decreasing=TRUE)[1])
+}
+
+```
+
+```{r}
+computeAcc <- function(ensembleL, testData, classIndex){
+  acc <- 0
+  for(i in 1:nrow(testData)){
+    if(testData[i,classIndex] == voter(ensembleL, testData[i,])){
+      acc <- acc+1
+    }
+  }
+  return(acc/nrow(testData))
+}
+```
+
+```{r}
+#data <- read.csv("dadosBenchmark.csv",header = TRUE,stringsAsFactors = FALSE,sep=";")
+#data <- read.csv("pima.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
 #data$target <- as.logical(data$target)
-indexClass <- 5
-data$RID <- NULL
+#indexClass <- 5
 
-results <- bootstraping(data, indexClass)
+ data2 <- read.csv("pimateste.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+ data2$target <- as.logical(data2$target)
+ indexClass <- 9
+ #data$RID <- NULL
 
-# tree <- Node$new("ROOT")
-# tree <- computeTree(tree, data, indexClass)
-# tree
-# 
-# testData <- read.csv("testePercorre.csv",header = TRUE,stringsAsFactors = FALSE,sep=";")
-# foo <- walkTree(tree)
-
-# data2 <- read.csv("pimateste.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
-# data2$target <- as.logical(data2$target)
-# indexClass <- 9
-# tree2 <- Node$new("ROOT")
-# tree2 <- computeTree(tree2,data2, indexClass)
-# tree2
-# 
-# testData <- read.csv("trainTest.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
-# testData$target <- as.logical(testData$target)
-# result2 <- walkTree(tree2)
+ classOne <- data2[which(data2$target == TRUE),]
+ classTwo <- data2[which(data2$target == FALSE),]
+ 
+ randomClassOne <- classOne[sample(nrow(classOne), round(0.2*nrow(classOne))),]
+ randomClassTwo <- classTwo[sample(nrow(classTwo), round(0.2*nrow(classTwo))),]
+ test <- rbind(randomClassOne, randomClassTwo)
+ 
+ nTrees <- 10
+ randomTrees10 <- list()b
+ randomTrees10 <- ensemble(data2, indexClass, nTrees)
+ accuracy[1] <- computeAcc(randomTrees10, test, indexClass)
+ 
+ nTrees <- 25
+ randomTrees25 <- vector()
+ randomTrees25 <- ensemble(data2, indexClass, nTrees)
+ accuracy[2] <- computeAcc(randomTrees25, test, indexClass)
+  
+ nTrees <- 50
+ randomTrees50 <- vector()
+ randomTrees50 <- ensemble(data2, indexClass, nTrees)
+ accuracy[3] <- computeAcc(randomTrees50, test, indexClass)
 ```
