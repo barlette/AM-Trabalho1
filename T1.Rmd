@@ -239,18 +239,12 @@ computeAcc <- function(ensembleL, testData, classIndex){
  randomClassTwo <- classTwo[sample(nrow(classTwo), round(0.2*nrow(classTwo))),]
  test <- rbind(randomClassOne, randomClassTwo)
  
- nTrees <- 10
- randomTrees10 <- list()b
- randomTrees10 <- ensemble(data2, indexClass, nTrees)
- accuracy[1] <- computeAcc(randomTrees10, test, indexClass)
+ accuracy <- vector()
  
- nTrees <- 25
- randomTrees25 <- vector()
- randomTrees25 <- ensemble(data2, indexClass, nTrees)
- accuracy[2] <- computeAcc(randomTrees25, test, indexClass)
-  
- nTrees <- 50
- randomTrees50 <- vector()
- randomTrees50 <- ensemble(data2, indexClass, nTrees)
- accuracy[3] <- computeAcc(randomTrees50, test, indexClass)
+ for(i in 1:50){
+  nTrees <- i
+  randomTrees <- list()
+  randomTrees <- ensemble(data2, indexClass, nTrees)
+  accuracy[i] <- computeAcc(randomTrees, test, indexClass)
+ }
 ```
