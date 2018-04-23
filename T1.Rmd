@@ -226,6 +226,7 @@ computeAcc <- function(ensembleL, testData, classIndex){
 #data <- read.csv("pima.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
 #data$target <- as.logical(data$target)
 #indexClass <- 5
+ folds <- list()
 
  data2 <- read.csv("pimateste.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
  data2$target <- as.logical(data2$target)
@@ -243,22 +244,46 @@ computeAcc <- function(ensembleL, testData, classIndex){
  if(length(head(idClassTwo, nrow(classTwo)-length(idClassTwo)) > 0))
   idClassTwo <- head(idClassTwo, nrow(classTwo)-length(idClassTwo))
  
- randomizerClassOne <- classOne[sample(seq_along(classOne), length(classOne))]
- randomizerClassTwo <- classTwo[sample(seq_along(classTwo), length(classTwo))]
+ randomClassOne <- classOne[sample(seq_along(classOne), length(classOne))]
+ randomClassTwo <- classTwo[sample(seq_along(classTwo), length(classTwo))]
  
  ListClassOne <- split(classOne, idClassOne)
  ListClassTwo <- split(classTwo, idClassTwo)
  
- #randomClassOne <- classOne[sample(nrow(classOne), round(0.2*nrow(classOne))),]
- #randomClassTwo <- classTwo[sample(nrow(classTwo), round(0.2*nrow(classTwo))),]
- #test <- rbind(randomClassOne, randomClassTwo)
+ for(i in 1:10){
+  folds[[i]] <- rbind(ListClassOne[[i]], ListClassTwo[[i]])}
  
- # accuracy <- vector()
- # 
- # for(i in 1:50){
- #  nTrees <- i
- #  randomTrees <- list()
- #  randomTrees <- ensemble(data2, indexClass, nTrees)
- #  accuracy[i] <- computeAcc(randomTrees, test, indexClass)
- # }
+ randomTrees <- list()
+
+ accuracy10 <- vector() 
+ accuracy25 <- vector()
+ accuracy50 <- vector()
+ 
+  nTrees <- 10
+  for(i in 1:10){
+    test <- folds[[i]]
+    train <- do.call(rbind.data.frame, folds[-i])
+   
+    randomTrees <- ensemble(train, indexClass, nTrees)
+    accuracy10[i] <- computeAcc(randomTrees, test, indexClass)
+  }
+  
+  nTrees <- 25
+  for(i in 1:10){
+    test <- folds[[i]]
+    train <- do.call(rbind.data.frame, folds[-i])
+   
+    randomTrees <- ensemble(train, indexClass, nTrees)
+    accuracy25[i] <- computeAcc(randomTrees, test, indexClass)
+  }
+    
+  nTrees <- 50
+  for(i in 1:10){
+    test <- folds[[i]]
+    train <- do.call(rbind.data.frame, folds[-i])
+   
+    randomTrees <- ensemble(train, indexClass, nTrees)
+    accuracy50[i] <- computeAcc(randomTrees, test, indexClass)
+  }
+
 ```
