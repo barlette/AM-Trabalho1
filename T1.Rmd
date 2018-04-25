@@ -100,17 +100,33 @@ computeTree <- function(tree, data, indexClass){
     entropies[randomAtt[i]] <- entropyClass - computeEntropy(data, attIndex = randomAtt[i], indexClass)
   }
   maxGain <- which.max(entropies)
+  #print(maxGain)
   if(!is.numeric(data[[maxGain]])){
     test <- unique(data[maxGain])
     entropies <- NULL
     entropies <- numeric(nrow(test))
   }
-
-  subData <- list()
-
-  tree  <- tree$AddChild(colnames(data[maxGain]))
   
+  subData <- list()
   if(is.numeric(data[[maxGain]])){
+    if(length(unique(data[[maxGain]])) == 1){
+      #print(unique(data[[maxGain]]))
+      #print("teste1")
+      #print(names(which.max(table(data[,indexClass]))))
+      #print(data)
+      dist <- table(data[,indexClass])
+      
+      if(dist[[1]] == dist[[2]]){
+        #print(unique(data[,indexClass])[sample(1:2, 1)])
+        #print(data)
+        tree <- tree$AddChild(unique(data[,indexClass])[sample(1:2, 1)])
+      } else {
+      tree <- tree$AddChild(names(which.max(table(data[,indexClass]))))
+      }
+      
+    } else {
+      #print("teste2")
+    tree  <- tree$AddChild(colnames(data)[maxGain])
     for(i in 1:2){
       if(i == 1){
         child <- tree$AddChild(paste("<=", mean(data[,maxGain])))
@@ -130,8 +146,10 @@ computeTree <- function(tree, data, indexClass){
       child$AddChild(unique(subData[[i]][,indexClass]))
     }
     }
+    }
   }
   else{
+    tree  <- tree$AddChild(colnames(data)[maxGain])
     for(i in 1:(nrow(test))){
       child <- tree$AddChild(test[[1]][i])
       subData[[i]] <- data[which(data[[maxGain]]==test[[1]][i]),]
@@ -202,9 +220,11 @@ voter <- function(ensembleL, testData){
   for(i in 1:length(ensembleL)){
     if(length(walkTree(ensembleL[[i]], testData)) != 0){
       result[i] <- walkTree(ensembleL[[i]], testData)
-    }
+    } 
   }
-  return(sort(result, decreasing=TRUE)[1])
+  #return(sort(result, decreasing=TRUE)[1])
+  #print(result)
+  return(names(which.max(table(result))))
 }
 
 ```
@@ -213,6 +233,8 @@ voter <- function(ensembleL, testData){
 computeAcc <- function(ensembleL, testData, classIndex){
   acc <- 0
   for(i in 1:nrow(testData)){
+    #print(testData[i, classIndex])
+    #print(voter(ensembleL, testData[i,]))
     if(testData[i,classIndex] == voter(ensembleL, testData[i,])){
       acc <- acc+1
     }
@@ -255,10 +277,18 @@ computeAcc <- function(ensembleL, testData, classIndex){
  
  randomTrees <- list()
 
- accuracy10 <- vector() 
- accuracy25 <- vector()
- accuracy50 <- vector()
+ accuracy10  <- matrix() 
+ accuracy25  <- matrix()
+ accuracy50  <- matrix()
+ accuracy100 <- matrix()
  
+ accTotal10  <- list()
+ accTotal25  <- list()
+ accTotal50  <- list()
+ accTotal100 <- list()
+ 
+ for(j in 1:5)
+ {
   nTrees <- 10
   for(i in 1:10){
     test <- folds[[i]]
@@ -267,23 +297,36 @@ computeAcc <- function(ensembleL, testData, classIndex){
     randomTrees <- ensemble(train, indexClass, nTrees)
     accuracy10[i] <- computeAcc(randomTrees, test, indexClass)
   }
-  
+ accTotal10[[j]] <- accuracy10
+ 
   nTrees <- 25
   for(i in 1:10){
     test <- folds[[i]]
     train <- do.call(rbind.data.frame, folds[-i])
-   
+
     randomTrees <- ensemble(train, indexClass, nTrees)
     accuracy25[i] <- computeAcc(randomTrees, test, indexClass)
   }
-    
+  accTotal25[[j]] <- accuracy25
+
   nTrees <- 50
   for(i in 1:10){
     test <- folds[[i]]
     train <- do.call(rbind.data.frame, folds[-i])
-   
+
     randomTrees <- ensemble(train, indexClass, nTrees)
     accuracy50[i] <- computeAcc(randomTrees, test, indexClass)
   }
+ accTotal50[[j]] <- accuracy50
+  nTrees <- 100
+  for(i in 1:10){
+    test <- folds[[i]]
+    train <- do.call(rbind.data.frame, folds[-i])
 
+    randomTrees <- ensemble(train, indexClass, nTrees)
+    accuracy100[i] <- computeAcc(randomTrees, test, indexClass)
+  }
+  accTotal100[[j]] <- accuracy100
+ }
+  
 ```
