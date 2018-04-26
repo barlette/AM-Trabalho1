@@ -94,6 +94,7 @@ randomAttr <- function(data){
 ```{r}
 computeTree <- function(tree, data, indexClass){
   randomAtt <- randomAttr(data[-indexClass])
+  #print(randomAtt)
   entropyClass <- computeEntropy(data, NULL, indexClass)
   entropies <- numeric(ncol(data)-1)
   for(i in 1:length(randomAtt)){
@@ -114,9 +115,9 @@ computeTree <- function(tree, data, indexClass){
       #print("teste1")
       #print(names(which.max(table(data[,indexClass]))))
       #print(data)
-      dist <- table(data[,indexClass])
       
-      if(dist[[1]] == dist[[2]]){
+      
+      if(length(unique(table(data[,indexClass]))) == 1){
         #print(unique(data[,indexClass])[sample(1:2, 1)])
         #print(data)
         tree <- tree$AddChild(unique(data[,indexClass])[sample(1:2, 1)])
@@ -171,7 +172,8 @@ walkTree <- function(tree, testData){
     return(tree$name)
     }
     else{
-  attribute <- grep(tree$name, colnames(testData))
+  attribute <- grep(paste("\\b",tree$name,"\\b",sep=""), colnames(testData))
+  #print(attribute)
   if(is.numeric(testData[[attribute]])){
     attAvg <- substring(tree$children[[1]]$name, 4)
     if(testData[[attribute]] > as.numeric(attAvg)){
@@ -218,6 +220,9 @@ ensemble <- function(data, indexClass, nTrees){
 voter <- function(ensembleL, testData){
   result <- vector()
   for(i in 1:length(ensembleL)){
+    #("tree")
+    #print(i)
+    #print(ensembleL[[i]])
     if(length(walkTree(ensembleL[[i]], testData)) != 0){
       result[i] <- walkTree(ensembleL[[i]], testData)
     } 
@@ -244,89 +249,114 @@ computeAcc <- function(ensembleL, testData, classIndex){
 ```
 
 ```{r}
-#data <- read.csv("dadosBenchmark.csv",header = TRUE,stringsAsFactors = FALSE,sep=";")
-#data <- read.csv("pima.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
-#data$target <- as.logical(data$target)
-#indexClass <- 5
- folds <- list()
+data <- read.csv("wine.csv",header = TRUE,stringsAsFactors = FALSE,sep=",")
+data <- data[,c(2,3,4,5,6,7,8,9,10,11,12,13,14,1)]
+indexClass <- 14
 
- data2 <- read.csv("pimateste.csv", header = TRUE, stringsAsFactors = FALSE, sep = "\t")
- data2$target <- as.logical(data2$target)
- indexClass <- 9
- #data$RID <- NULL
+classes <- unique(data[,indexClass])
+sclass <- list()
+idClass <- list()
+randomClass <- list()
+ListClass <-list()
+folds <- list()
 
- classOne <- data2[which(data2$target == TRUE),]
- classTwo <- data2[which(data2$target == FALSE),]
- 
- idClassOne <- rep(1:10, (nrow(classOne)/10) + ceiling((nrow(classOne)%%10)/10))
- idClassTwo <- rep(1:10, (nrow(classTwo)/10) + ceiling((nrow(classTwo)%%10)/10))
- if(length(head(idClassOne, nrow(classOne)-length(idClassOne))) > 0 )
-  idClassOne <- head(idClassOne, nrow(classOne)-length(idClassOne))
- 
- if(length(head(idClassTwo, nrow(classTwo)-length(idClassTwo)) > 0))
-  idClassTwo <- head(idClassTwo, nrow(classTwo)-length(idClassTwo))
- 
- randomClassOne <- classOne[sample(seq_along(classOne), length(classOne))]
- randomClassTwo <- classTwo[sample(seq_along(classTwo), length(classTwo))]
- 
- ListClassOne <- split(classOne, idClassOne)
- ListClassTwo <- split(classTwo, idClassTwo)
- 
- for(i in 1:10){
-  folds[[i]] <- rbind(ListClassOne[[i]], ListClassTwo[[i]])}
- 
- randomTrees <- list()
+for(i in 1:length(classes)){
+  sclass[[i]] <- data[which(data[,indexClass] == classes[i]),]
+  idClass[[i]] <- rep(1:10, (nrow(sclass[[i]])/10) + ceiling((nrow(sclass[[i]])%%10)/10))
+  if(length(head(idClass[[i]], nrow(sclass[[i]])-length(idClass[[i]]))) > 0 ){
+    idClass[[i]] <- head(idClass[[i]], nrow(sclass[[i]])-length(idClass[[i]]))}
+    randomClass[[i]] <- sclass[[i]][sample(seq_along(sclass[[i]]), length(sclass[[i]]))]
+    ListClass[[i]] <- split(sclass[[i]], idClass[[i]])
+}
 
- accuracy10  <- matrix() 
- accuracy25  <- matrix()
- accuracy50  <- matrix()
- accuracy100 <- matrix()
- 
- accTotal10  <- list()
- accTotal25  <- list()
- accTotal50  <- list()
- accTotal100 <- list()
- 
- for(j in 1:5)
- {
-  nTrees <- 10
-  for(i in 1:10){
-    test <- folds[[i]]
-    train <- do.call(rbind.data.frame, folds[-i])
-   
-    randomTrees <- ensemble(train, indexClass, nTrees)
-    accuracy10[i] <- computeAcc(randomTrees, test, indexClass)
+for(i in 1:10){
+  folds[[i]] <- vector()
+  for(k in 1:length(classes)){
+    folds[[i]] <- rbind(folds[[i]], ListClass[[k]][i])
   }
- accTotal10[[j]] <- accuracy10
- 
-  nTrees <- 25
-  for(i in 1:10){
-    test <- folds[[i]]
-    train <- do.call(rbind.data.frame, folds[-i])
+  folds[[i]] <- do.call(rbind, folds[[i]])
+}
 
-    randomTrees <- ensemble(train, indexClass, nTrees)
-    accuracy25[i] <- computeAcc(randomTrees, test, indexClass)
-  }
-  accTotal25[[j]] <- accuracy25
+accuracy10 <- matrix()
+accuracy25 <- matrix()
+accuracy50 <- matrix()
+accuracy100 <- matrix()
 
-  nTrees <- 50
-  for(i in 1:10){
-    test <- folds[[i]]
-    train <- do.call(rbind.data.frame, folds[-i])
-
-    randomTrees <- ensemble(train, indexClass, nTrees)
-    accuracy50[i] <- computeAcc(randomTrees, test, indexClass)
-  }
- accTotal50[[j]] <- accuracy50
-  nTrees <- 100
-  for(i in 1:10){
-    test <- folds[[i]]
-    train <- do.call(rbind.data.frame, folds[-i])
-
-    randomTrees <- ensemble(train, indexClass, nTrees)
-    accuracy100[i] <- computeAcc(randomTrees, test, indexClass)
-  }
-  accTotal100[[j]] <- accuracy100
- }
+for(i in 1:10){
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
   
+  nTrees <- 10
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy10[i] <- computeAcc(randomTrees, test, indexClass)
+  
+  nTrees <- 25
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy25[i] <- computeAcc(randomTrees, test, indexClass)
+  
+  nTrees <- 50
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy50[i] <- computeAcc(randomTrees, test, indexClass)
+  
+  nTrees <- 100
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy100[i] <- computeAcc(randomTrees, test, indexClass)
+}
+```
+
+```{r}
+data <- read.csv("pima.csv",header = TRUE,stringsAsFactors = FALSE,sep="\t")
+indexClass <- 9
+
+classes <- unique(data[,indexClass])
+sclass <- list()
+idClass <- list()
+randomClass <- list()
+ListClass <-list()
+folds <- list()
+
+for(i in 1:length(classes)){
+  sclass[[i]] <- data[which(data[,indexClass] == classes[i]),]
+  idClass[[i]] <- rep(1:10, (nrow(sclass[[i]])/10) + ceiling((nrow(sclass[[i]])%%10)/10))
+  if(length(head(idClass[[i]], nrow(sclass[[i]])-length(idClass[[i]]))) > 0 ){
+    idClass[[i]] <- head(idClass[[i]], nrow(sclass[[i]])-length(idClass[[i]]))}
+    randomClass[[i]] <- sclass[[i]][sample(seq_along(sclass[[i]]), length(sclass[[i]]))]
+    ListClass[[i]] <- split(sclass[[i]], idClass[[i]])
+}
+
+for(i in 1:10){
+  folds[[i]] <- vector()
+  for(k in 1:length(classes)){
+    folds[[i]] <- rbind(folds[[i]], ListClass[[k]][i])
+  }
+  folds[[i]] <- do.call(rbind, folds[[i]])
+}
+
+accuracy10 <- matrix()
+accuracy25 <- matrix()
+accuracy50 <- matrix()
+accuracy100 <- matrix()
+
+for(i in 1:10){
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
+  nTrees <- 10
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy10[i] <- computeAcc(randomTrees, test, indexClass)
+  
+  nTrees <- 25
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy25[i] <- computeAcc(randomTrees, test, indexClass)
+  
+  nTrees <- 50
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy50[i] <- computeAcc(randomTrees, test, indexClass)
+  
+  nTrees <- 100
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy100[i] <- computeAcc(randomTrees, test, indexClass)
+}
+
+
 ```
