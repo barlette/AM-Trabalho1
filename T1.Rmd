@@ -236,15 +236,91 @@ voter <- function(ensembleL, testData){
 
 ```{r}
 computeAcc <- function(ensembleL, testData, classIndex){
-  acc <- 0
+  dim <- length(unique(testData[,classIndex]))
+  results <- matrix(0, nrow=dim, ncol = dim)
+  precision <- vector()
+  recall <- vector()
+  fm <- vector()
+  
   for(i in 1:nrow(testData)){
     #print(testData[i, classIndex])
     #print(voter(ensembleL, testData[i,]))
-    if(testData[i,classIndex] == voter(ensembleL, testData[i,])){
-      acc <- acc+1
+    result <- voter(ensembleL, testData[i,])
+    if(testData[i,classIndex] == result){
+      #print("test1")
+      cell <- grep(testData[i,classIndex], unique(testData[,classIndex]))
+      results[cell,cell] <- results[cell,cell]+1
+    } else {
+      row <- grep(result, unique(testData[,classIndex]))
+      col <- grep(testData[i, classIndex], unique(testData[,classIndex]))
+      
+      results[row,col] = results[row,col]+1
     }
   }
-  return(acc/nrow(testData))
+  
+  print(results)
+  for(i in 1:dim) {
+      recall[i] <- results[i,i]/sum(results[,i])
+      precision[i] <- results[i,i]/sum(results[i,])
+      fm[i] <- 2*(precision[i]*recall[i])/(precision[i]+recall[i])
+  }
+  return(fm)
+}
+```
+
+```{r}
+data <- read.csv("ionosphere.csv",header = TRUE,stringsAsFactors = FALSE,sep=",")
+indexClass <- 35
+
+classes <- unique(data[,indexClass])
+sclass <- list()
+idClass <- list()
+randomClass <- list()
+ListClass <-list()
+folds <- list()
+
+for(i in 1:length(classes)){
+  sclass[[i]] <- data[which(data[,indexClass] == classes[i]),]
+  idClass[[i]] <- rep(1:10, (nrow(sclass[[i]])/10) + ceiling((nrow(sclass[[i]])%%10)/10))
+  if(length(head(idClass[[i]], nrow(sclass[[i]])-length(idClass[[i]]))) > 0 ){
+    idClass[[i]] <- head(idClass[[i]], nrow(sclass[[i]])-length(idClass[[i]]))}
+    randomClass[[i]] <- sclass[[i]][sample(seq_along(sclass[[i]]), length(sclass[[i]]))]
+    ListClass[[i]] <- split(sclass[[i]], idClass[[i]])
+}
+
+for(i in 1:10){
+  folds[[i]] <- vector()
+  for(k in 1:length(classes)){
+    folds[[i]] <- rbind(folds[[i]], ListClass[[k]][i])
+  }
+  folds[[i]] <- do.call(rbind, folds[[i]])
+}
+
+accuracy10 <- vector()
+accuracy25 <- vector()
+accuracy50 <- vector()
+accuracy100 <- vector()
+
+for(i in 1:10){
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
+  nTrees <- 10
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  #print(computeAcc(randomTrees, test, indexClass))
+  accuracy10 <- c(accuracy10, computeAcc(randomTrees, test, indexClass))
+  
+  nTrees <- 25
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy25 <- c(accuracy25, computeAcc(randomTrees, test, indexClass))
+
+  nTrees <- 50
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy50 <- c(accuracy50, computeAcc(randomTrees, test, indexClass))
+
+  nTrees <- 100
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  accuracy100 <- c(accuracy100, computeAcc(randomTrees, test, indexClass))
 }
 ```
 
@@ -277,10 +353,10 @@ for(i in 1:10){
   folds[[i]] <- do.call(rbind, folds[[i]])
 }
 
-accuracy10 <- matrix()
-accuracy25 <- matrix()
-accuracy50 <- matrix()
-accuracy100 <- matrix()
+accuracy10 <- vector()
+accuracy25 <- vector()
+accuracy50 <- vector()
+accuracy100 <- vector()
 
 for(i in 1:10){
   test <- folds[[i]]
@@ -288,19 +364,19 @@ for(i in 1:10){
   
   nTrees <- 10
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy10[i] <- computeAcc(randomTrees, test, indexClass)
-  
+  accuracy10 <- c(accuracy10, computeAcc(randomTrees, test, indexClass))
+
   nTrees <- 25
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy25[i] <- computeAcc(randomTrees, test, indexClass)
-  
-  nTrees <- 50
-  randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy50[i] <- computeAcc(randomTrees, test, indexClass)
-  
+  accuracy25 <- c(accuracy25, computeAcc(randomTrees, test, indexClass))
+
+   nTrees <- 50
+   randomTrees <- ensemble(train, indexClass, nTrees)
+   accuracy50 <- c(accuracy50, computeAcc(randomTrees, test, indexClass))
+
   nTrees <- 100
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy100[i] <- computeAcc(randomTrees, test, indexClass)
+  accuracy100 <- c(accuracy100, computeAcc(randomTrees, test, indexClass))
 }
 ```
 
@@ -332,10 +408,10 @@ for(i in 1:10){
   folds[[i]] <- do.call(rbind, folds[[i]])
 }
 
-accuracy10 <- matrix()
-accuracy25 <- matrix()
-accuracy50 <- matrix()
-accuracy100 <- matrix()
+accuracy10 <- vector()
+accuracy25 <- vector()
+accuracy50 <- vector()
+accuracy100 <- vector()
 
 for(i in 1:10){
   test <- folds[[i]]
@@ -343,19 +419,20 @@ for(i in 1:10){
   
   nTrees <- 10
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy10[i] <- computeAcc(randomTrees, test, indexClass)
+  accuracy10 <- c(accuracy10, computeAcc(randomTrees, test, indexClass))
   
   nTrees <- 25
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy25[i] <- computeAcc(randomTrees, test, indexClass)
+  accuracy25 <- c(accuracy25, computeAcc(randomTrees, test, indexClass))
   
   nTrees <- 50
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy50[i] <- computeAcc(randomTrees, test, indexClass)
+  accuracy50 <- c(accuracy50, computeAcc(randomTrees, test, indexClass))
   
   nTrees <- 100
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy100[i] <- computeAcc(randomTrees, test, indexClass)
+  accuracy100 <- c(accuracy100, computeAcc(randomTrees, test, indexClass))
+  
 }
 
 
