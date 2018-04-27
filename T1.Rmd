@@ -391,6 +391,13 @@ randomClass <- list()
 ListClass <-list()
 folds <- list()
 
+accuracy10 <- vector()
+accuracy25 <- vector()
+accuracy50 <- vector()
+accuracy100 <- vector()
+
+for(i in 1:10){
+  
 for(i in 1:length(classes)){
   sclass[[i]] <- data[which(data[,indexClass] == classes[i]),]
   idClass[[i]] <- rep(1:10, (nrow(sclass[[i]])/10) + ceiling((nrow(sclass[[i]])%%10)/10))
@@ -408,10 +415,7 @@ for(i in 1:10){
   folds[[i]] <- do.call(rbind, folds[[i]])
 }
 
-accuracy10 <- vector()
-accuracy25 <- vector()
-accuracy50 <- vector()
-accuracy100 <- vector()
+
 
 for(i in 1:10){
   test <- folds[[i]]
@@ -434,6 +438,5 @@ for(i in 1:10){
   accuracy100 <- c(accuracy100, computeAcc(randomTrees, test, indexClass))
   
 }
-
-
+}
 ```
