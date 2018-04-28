@@ -269,15 +269,34 @@ computeAcc <- function(ensembleL, testData, classIndex){
 ```
 
 ```{r}
-data <- read.csv("ionosphere.csv",header = TRUE,stringsAsFactors = FALSE,sep=",")
-indexClass <- 35
+library(foreach)
+library(doParallel)
 
-classes <- unique(data[,indexClass])
 sclass <- list()
 idClass <- list()
 randomClass <- list()
 ListClass <-list()
 folds <- list()
+
+cores <- detectCores()
+cl <- makeCluster(cores[1])
+registerDoParallel(cl)
+```
+
+```{r}
+ionoResults10  <- vector()
+ionoResults25  <- vector()
+ionoResults50  <- vector()
+ionoResults100 <- vector()
+ionoResults125 <- vector()
+ionoResults150 <- vector()
+
+data <- read.csv("ionosphere.csv",header = TRUE,stringsAsFactors = FALSE,sep=",")
+#data <- data[,c(2,3,4,5,6,7,8,9,10,11,12,13,14,1)]
+indexClass <- 35
+classes <- unique(data[,indexClass])
+
+for(j in 1:10){
 
 for(i in 1:length(classes)){
   sclass[[i]] <- data[which(data[,indexClass] == classes[i]),]
@@ -296,45 +315,93 @@ for(i in 1:10){
   folds[[i]] <- do.call(rbind, folds[[i]])
 }
 
-accuracy10 <- vector()
-accuracy25 <- vector()
-accuracy50 <- vector()
-accuracy100 <- vector()
 
-for(i in 1:10){
+
+results10 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   test <- folds[[i]]
   train <- do.call(rbind.data.frame, folds[-i])
   
   nTrees <- 10
   randomTrees <- ensemble(train, indexClass, nTrees)
-  #print(computeAcc(randomTrees, test, indexClass))
-  accuracy10 <- c(accuracy10, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+results25 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
   
   nTrees <- 25
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy25 <- c(accuracy25, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
 
+results50 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
   nTrees <- 50
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy50 <- c(accuracy50, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
 
+results100 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
   nTrees <- 100
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy100 <- c(accuracy100, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+results125 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
+  nTrees <- 125
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+results150 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
+  nTrees <- 150
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+ionoResults10  <- c( ionoResults10,  results10)
+ionoResults25  <- c( ionoResults25,  results25)
+ionoResults50  <- c( ionoResults50,  results50)
+ionoResults100 <- c(ionoResults100, results100)
+ionoResults125 <- c(ionoResults125, results125)
+ionoResults150 <- c(ionoResults150, results150)
+
 }
 ```
 
 ```{r}
+
+wineResults10  <- vector()
+wineResults25  <- vector()
+wineResults50  <- vector()
+wineResults100 <- vector()
+wineResults125 <- vector()
+wineResults150 <- vector()
+
 data <- read.csv("wine.csv",header = TRUE,stringsAsFactors = FALSE,sep=",")
 data <- data[,c(2,3,4,5,6,7,8,9,10,11,12,13,14,1)]
 indexClass <- 14
-
 classes <- unique(data[,indexClass])
-sclass <- list()
-idClass <- list()
-randomClass <- list()
-ListClass <-list()
-folds <- list()
+
+for(j in 1:10){
 
 for(i in 1:length(classes)){
   sclass[[i]] <- data[which(data[,indexClass] == classes[i]),]
@@ -353,51 +420,94 @@ for(i in 1:10){
   folds[[i]] <- do.call(rbind, folds[[i]])
 }
 
-accuracy10 <- vector()
-accuracy25 <- vector()
-accuracy50 <- vector()
-accuracy100 <- vector()
 
-for(i in 1:10){
+
+results10 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   test <- folds[[i]]
   train <- do.call(rbind.data.frame, folds[-i])
   
   nTrees <- 10
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy10 <- c(accuracy10, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
 
+results25 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
   nTrees <- 25
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy25 <- c(accuracy25, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
 
-   nTrees <- 50
-   randomTrees <- ensemble(train, indexClass, nTrees)
-   accuracy50 <- c(accuracy50, computeAcc(randomTrees, test, indexClass))
+results50 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
+  nTrees <- 50
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
 
+results100 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
   nTrees <- 100
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy100 <- c(accuracy100, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+results125 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
+  nTrees <- 125
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+results150 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
+  nTrees <- 150
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+wineResults10  <- c( wineResults10,  results10)
+wineResults25  <- c( wineResults25,  results25)
+wineResults50  <- c( wineResults50,  results50)
+wineResults100 <- c(wineResults100, results100)
+wineResults125 <- c(wineResults125, results125)
+wineResults150 <- c(wineResults150, results150)
+
 }
 ```
 
 ```{r}
+
+pimaResults10  <- vector()
+pimaResults25  <- vector()
+pimaResults50  <- vector()
+pimaResults100 <- vector()
+pimaResults125 <- vector()
+pimaResults150 <- vector()
+
 data <- read.csv("pima.csv",header = TRUE,stringsAsFactors = FALSE,sep="\t")
+#data <- data[,c(2,3,4,5,6,7,8,9,10,11,12,13,14,1)]
 indexClass <- 9
-
 classes <- unique(data[,indexClass])
-sclass <- list()
-idClass <- list()
-randomClass <- list()
-ListClass <-list()
-folds <- list()
 
-accuracy10 <- vector()
-accuracy25 <- vector()
-accuracy50 <- vector()
-accuracy100 <- vector()
+for(j in 1:10){
 
-for(i in 1:10){
-  
 for(i in 1:length(classes)){
   sclass[[i]] <- data[which(data[,indexClass] == classes[i]),]
   idClass[[i]] <- rep(1:10, (nrow(sclass[[i]])/10) + ceiling((nrow(sclass[[i]])%%10)/10))
@@ -415,28 +525,75 @@ for(i in 1:10){
   folds[[i]] <- do.call(rbind, folds[[i]])
 }
 
-
-
-for(i in 1:10){
+results10 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   test <- folds[[i]]
   train <- do.call(rbind.data.frame, folds[-i])
   
   nTrees <- 10
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy10 <- c(accuracy10, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+results25 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
   
   nTrees <- 25
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy25 <- c(accuracy25, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+results50 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
   
   nTrees <- 50
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy50 <- c(accuracy50, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+results100 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
   
   nTrees <- 100
   randomTrees <- ensemble(train, indexClass, nTrees)
-  accuracy100 <- c(accuracy100, computeAcc(randomTrees, test, indexClass))
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
+}
+
+results125 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
   
+  nTrees <- 125
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
 }
+
+results150 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
+  test <- folds[[i]]
+  train <- do.call(rbind.data.frame, folds[-i])
+  
+  nTrees <- 150
+  randomTrees <- ensemble(train, indexClass, nTrees)
+  tempResults <- computeAcc(randomTrees, test, indexClass)
+  tempResults
 }
+
+pimaResults10  <- c( pimaResults10,  results10)
+pimaResults25  <- c( pimaResults25,  results25)
+pimaResults50  <- c( pimaResults50,  results50)
+pimaResults100 <- c(pimaResults100, results100)
+pimaResults125 <- c(pimaResults125, results125)
+pimaResults150 <- c(pimaResults150, results150)
+
+}
+
+stopCluster(cl)
+
 ```
