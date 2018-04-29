@@ -269,6 +269,8 @@ computeAcc <- function(ensembleL, testData, classIndex){
 ```
 
 ```{r}
+library(parallel)
+library(iterators)
 library(foreach)
 library(doParallel)
 
@@ -533,7 +535,10 @@ results10 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   randomTrees <- ensemble(train, indexClass, nTrees)
   tempResults <- computeAcc(randomTrees, test, indexClass)
   tempResults
+  gc()  
 }
+
+
 
 results25 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   test <- folds[[i]]
@@ -543,7 +548,10 @@ results25 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   randomTrees <- ensemble(train, indexClass, nTrees)
   tempResults <- computeAcc(randomTrees, test, indexClass)
   tempResults
+  gc()
 }
+
+
 
 results50 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   test <- folds[[i]]
@@ -553,6 +561,7 @@ results50 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   randomTrees <- ensemble(train, indexClass, nTrees)
   tempResults <- computeAcc(randomTrees, test, indexClass)
   tempResults
+  gc()
 }
 
 results100 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
@@ -563,6 +572,7 @@ results100 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   randomTrees <- ensemble(train, indexClass, nTrees)
   tempResults <- computeAcc(randomTrees, test, indexClass)
   tempResults
+  gc()
 }
 
 results125 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
@@ -573,6 +583,7 @@ results125 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   randomTrees <- ensemble(train, indexClass, nTrees)
   tempResults <- computeAcc(randomTrees, test, indexClass)
   tempResults
+  gc()
 }
 
 results150 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
@@ -583,6 +594,7 @@ results150 <- foreach(i=1:10, .combine=cbind, .packages = 'data.tree') %dopar% {
   randomTrees <- ensemble(train, indexClass, nTrees)
   tempResults <- computeAcc(randomTrees, test, indexClass)
   tempResults
+  gc()
 }
 
 pimaResults10  <- c( pimaResults10,  results10)
@@ -592,6 +604,7 @@ pimaResults100 <- c(pimaResults100, results100)
 pimaResults125 <- c(pimaResults125, results125)
 pimaResults150 <- c(pimaResults150, results150)
 
+gc()
 }
 
 stopCluster(cl)
