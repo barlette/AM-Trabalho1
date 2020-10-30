@@ -1,7 +1,7 @@
 # AM-Trabalho1
 Primeiro Trabalho de Aprendizado de Máquina
 
-![Slides](https://github.com/barlette/AM-Trabalho1/blob/master/Trabalho 1 - Aprendizado de Máquina.pdf?raw=true)
+![Slides](https://github.com/barlette/AM-Trabalho1/blob/master/T1-AM.pdf?raw=true)
 
 Passos:
 
