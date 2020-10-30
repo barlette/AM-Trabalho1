@@ -1,6 +1,8 @@
 # AM-Trabalho1
 Primeiro Trabalho de Aprendizado de Máquina
 
+![Slides](https://github.com/barlette/AM-Trabalho1/blob/master/Trabalho 1 - Aprendizado de Máquina.pdf?raw=true)
+
 Passos:
 
 DONE    -> O algoritmo de indução de uma árvore de decisão, usando como critério de seleção de atributos para divisão de nós o Ganho de Informação (baseado no             conceito de entropia), como visto na disciplina, tratando tanto atributos categóricos quanto numéricos;
